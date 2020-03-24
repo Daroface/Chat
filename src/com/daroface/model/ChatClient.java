@@ -10,13 +10,19 @@ public class ChatClient {
     private static final String serverName = "localhost";
     private static final int serverPort = 6870;
 
-    public ChatClient() throws SocketException, UnknownHostException {
+    public ChatClient() throws IOException {
         socket = new DatagramSocket();
         address = InetAddress.getByName(serverName);
+        registerMe();
     }
 
     public String sendMessage(String message) throws IOException {
         buffer = message.getBytes();
+        String received = preparePacket();
+        return received;
+    }
+
+    private String preparePacket() throws IOException {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, serverPort);
         socket.send(packet);
         packet = new DatagramPacket(buffer, buffer.length);
@@ -28,6 +34,14 @@ public class ChatClient {
 
     public void close() {
         socket.close();
+    }
+
+    private void registerMe() throws IOException {
+        buffer = "addMe".getBytes();
+        String serverRespond = preparePacket();
+        if(!serverRespond.equals("Ok")) {
+            throw new IOException("Server problem.");
+        }
     }
 }
 
