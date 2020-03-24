@@ -26,6 +26,7 @@ public class ChatClient {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, serverPort);
         socket.send(packet);
         packet = new DatagramPacket(buffer, buffer.length);
+        socket.setSoTimeout(2000);
         socket.receive(packet);
         String received = new String(
                 packet.getData(), 0, packet.getLength());
