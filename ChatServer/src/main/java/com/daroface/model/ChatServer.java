@@ -30,11 +30,13 @@ public class ChatServer extends Thread {
                 int clientPort = packet.getPort();
                 String receivedMessage = new String(packet.getData(), 0, packet.getLength());
                 if(execute(receivedMessage, packet)) {
+                    clearBuffer();
                     buffer = "Ok".getBytes();
+                } else {
+                    packet = new DatagramPacket(buffer, buffer.length, address, clientPort);
+                    socket.send(packet);
                 }
-                packet = new DatagramPacket(buffer, buffer.length, address, clientPort);
-                socket.send(packet);
-                buffer = new byte[256];
+                clearBuffer();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,5 +66,9 @@ public class ChatServer extends Thread {
             }
         }
         return false;
+    }
+
+    private void clearBuffer() {
+        buffer = new byte[256];
     }
 }
