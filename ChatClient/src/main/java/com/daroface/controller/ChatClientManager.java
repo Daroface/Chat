@@ -12,7 +12,7 @@ public class ChatClientManager {
         try {
             chatClient = new ChatClient();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
