@@ -25,11 +25,13 @@ public class ChatServer extends Thread {
                 socket.receive(packet);
                 InetAddress address = packet.getAddress();
                 int clientPort = packet.getPort();
+                packet = new DatagramPacket(buffer, buffer.length, address, clientPort);
                 String received = new String(packet.getData(), 0, packet.getLength());
                 if (received.equals("end")) {
                     isRunning = false;
                     continue;
                 }
+                socket.send(packet);
             } catch (IOException e) {
                 e.printStackTrace();
             }
